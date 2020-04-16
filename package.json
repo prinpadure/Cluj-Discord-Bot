@@ -1,0 +1,24 @@
+{
+    "name": "cluj-discord-bot",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/prinpadure/Cluj-Discord-Bot.git"
+    },
+    "author": "padure",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/prinpadure/Cluj-Discord-Bot/issues"
+    },
+    "homepage": "https://github.com/prinpadure/Cluj-Discord-Bot#readme",
+    "dependencies": {
+        "@types/node": "^13.11.1",
+        "@types/ws": "^7.2.4",
+        "discord.js": "^12.1.1"
+    }
+}
