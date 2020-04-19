@@ -1,12 +1,9 @@
-import { Client, Message } from "discord.js";
-import Enmap from "enmap";
+import { Client, Collection, ClientEvents } from "discord.js";
 import fs from "fs";
+import { UserClient } from "./command-interface";
 
-const client = new Client();
-
-type commandRun = (client: Client, message: Message, args: string[]) => any;
-let commands = new Enmap<string, { run: commandRun }>();
-
+const client = new Client() as UserClient;
+client.commands = new Collection();
 const { prefix, token } = require("../config.json");
 
 client.once("ready", () => {
@@ -18,10 +15,14 @@ client.on("message", (message) => {
 
     let args: string[] = message.content.slice(prefix.length).trim().split(" ");
     let command = args.shift()!.toLowerCase();
-    const cmd = commands.get(command);
+    const cmd = client.commands.get(command);
     if (!cmd) return;
 
-    cmd.run(client, message, args);
+    try {
+        cmd.run(client, message, args);
+    } catch (error) {
+        console.error(error);
+    }
 });
 
 fs.readdir("./src/commands/", async (err, files) => {
@@ -31,7 +32,19 @@ fs.readdir("./src/commands/", async (err, files) => {
         let cmdName = file.split(".")[0];
         import(`./commands/${cmdName}`).then((props) => {
             console.log(`Loaded command '${cmdName}'`);
-            commands.set(cmdName, props);
+            client.commands.set(cmdName, props);
+        });
+    });
+});
+
+fs.readdir("./src/events/", async (err, files) => {
+    if (err) return console.error(err);
+    files.forEach((file) => {
+        if (!file.endsWith("ts")) return;
+        let evtName = file.split(".")[0];
+        import(`./commands/${evtName}`).then((evt) => {
+            console.log(`Loaded event '${evtName}'`);
+            client.on(evtName as keyof ClientEvents, evt.bind(null, client));
         });
     });
 });

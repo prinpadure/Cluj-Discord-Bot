@@ -1,10 +1,11 @@
 import { Client, Message } from "discord.js";
+import { Run, Help } from "../command-interface";
 
-function run(client: Client, message: Message, args: string[]) {
+let run: Run = (client: Client, message: Message, args: string[]) => {
     message.channel.send("pong!");
-}
+};
 
-let help = {
+let help: Help = {
     name: "ping",
 };
 
