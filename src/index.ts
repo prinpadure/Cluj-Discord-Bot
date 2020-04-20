@@ -1,7 +1,7 @@
 import { Client, Collection, ClientEvents } from "discord.js";
 import fs from "fs";
 import { UserClient } from "./command-interface";
-import message from "./events/message";
+import { default as initMongoose } from "./utils/mongoose";
 
 const client = new Client() as UserClient;
 client.commands = new Collection();
@@ -30,4 +30,5 @@ fs.readdir("./src/events/", async (err, files) => {
     }
 });
 
+initMongoose();
 client.login(token);
