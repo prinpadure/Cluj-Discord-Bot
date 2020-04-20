@@ -1,6 +1,7 @@
 import { Client, Message } from "discord.js";
 import { UserClient } from "../command-interface";
-const { prefix } = require("../../config.json");
+
+const prefix = process.env.PREFIX;
 
 let message = (client: Client, message: Message) => {
     if (message.content[0] !== prefix || message.author.bot) return;

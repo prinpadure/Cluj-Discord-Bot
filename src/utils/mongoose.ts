@@ -1,7 +1,5 @@
 import { default as mongoose } from "mongoose";
 
-const { mongoURI } = require("../../config.json");
-
 let init = () => {
     const dbOptions: mongoose.ConnectionOptions = {
         useNewUrlParser: true,
@@ -12,7 +10,8 @@ let init = () => {
         connectTimeoutMS: 10000,
         family: 4,
     };
-    mongoose.connect(mongoURI, dbOptions);
+    console.log();
+    mongoose.connect(process.env.MONGO_URI!, dbOptions);
     mongoose.set("useFindAndModify", false);
     (mongoose as any).Promise = global.Promise;
 

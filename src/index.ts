@@ -2,10 +2,12 @@ import { Client, Collection, ClientEvents } from "discord.js";
 import fs from "fs";
 import { UserClient } from "./command-interface";
 import { default as initMongoose } from "./utils/mongoose";
+import { config } from "dotenv-flow";
+
+config();
 
 const client = new Client() as UserClient;
 client.commands = new Collection();
-const { token } = require("../config.json");
 
 fs.readdir("./src/commands/", async (err, files) => {
     if (err) return console.error(err);
@@ -31,4 +33,4 @@ fs.readdir("./src/events/", async (err, files) => {
 });
 
 initMongoose();
-client.login(token);
+client.login();
