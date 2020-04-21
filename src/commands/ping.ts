@@ -7,6 +7,8 @@ let run: Run = (client: Client, message: Message, args: string[]) => {
 
 let help: Help = {
     name: "ping",
+    info: "Pong!",
+    usage: "",
 };
 
 export { help, run };
