@@ -6,7 +6,10 @@ import { default as mongoose } from "mongoose";
 let run: Run = (client: Client, message: Message, args: string[]) => {
     let user = message.mentions.members?.first();
     const arg = args[0];
+    if (user?.user.bot) return;
     if (user) {
+        let content = user.lastMessage?.content.substring(0, 3);
+        if (content === "```") message.channel.send("Can't grab code blocks.");
         let grab = new Grab({
             _id: mongoose.Types.ObjectId(),
             userId: user.id,
@@ -15,12 +18,12 @@ let run: Run = (client: Client, message: Message, args: string[]) => {
         });
         grab.save()
             .then((result) => {
+                message.channel.send("Done.");
                 console.log(result);
             })
             .catch((err) => {
                 console.log(err);
             });
-        message.channel.send("Done.");
         return;
     } else if (!arg) {
         message.channel.send(`${help.usage}`);
