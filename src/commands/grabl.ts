@@ -1,31 +1,40 @@
 import * as command from "../command-interface";
-import { Client, Message } from "discord.js";
+import { Client, Message, User } from "discord.js";
 import { default as Grab } from "../models/grab-model";
+
+const codeBlock = "```";
 
 let run: command.Run = async (
     client: Client,
     message: Message,
     args: string[]
 ) => {
-    let user = message.mentions.members?.first();
+    const user = message.mentions.members?.first();
 
-    let grabs = Grab.find(user ? { userId: user.user.id } : {})
+    const watch = user
+        ? user.nickname
+            ? user.nickname
+            : user.user.username
+        : "Server";
+    let codeBlockGrabs = watch + " grabs:\n";
+
+    let grabs = await getGrabs(user?.user);
+    codeBlockGrabs += codeBlock;
+    for (const grab of grabs as any) {
+        codeBlockGrabs +=
+            "<" + grab.userName + ">" + " " + grab.grabMessage + "\n";
+    }
+    codeBlockGrabs += codeBlock;
+    grabs.length > 0
+        ? message.channel.send(codeBlockGrabs)
+        : message.channel.send("Not Found.");
+};
+
+let getGrabs = async (user?: User) => {
+    let grabs = await Grab.find(user ? { userId: user.id } : {})
         .sort({ _id: -1 })
         .limit(10);
-
-    grabs.exec((err, grabs) => {
-        if (err) console.error(err);
-        let allGrabs = "Server grabs:\n```";
-        for (const grab of grabs as any) {
-            allGrabs +=
-                "<" + grab.userName + ">" + " " + grab.grabMessage + "\n";
-        }
-        allGrabs += "```";
-        console.log(grabs.length);
-        grabs.length > 0
-            ? message.channel.send(allGrabs)
-            : message.channel.send("Not Found.");
-    });
+    return grabs;
 };
 
 let help: command.Help = {

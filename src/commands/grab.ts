@@ -2,6 +2,7 @@ import { Client, Message } from "discord.js";
 import { Run, Help } from "../command-interface";
 import { default as Grab } from "../models/grab-model";
 import { default as mongoose } from "mongoose";
+import { isCodeBlock } from "../utils/messageContentUtils";
 
 let run: Run = async (client: Client, message: Message, args: string[]) => {
     if (!args[0]) {
@@ -9,10 +10,6 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
     } else {
         await processGrab(client, message, args);
     }
-};
-
-let isCodeBlock = (content: string): boolean => {
-    return (content.match(/```/g) || []).length === 2;
 };
 
 let processGrab = async (client: Client, message: Message, args: string[]) => {
