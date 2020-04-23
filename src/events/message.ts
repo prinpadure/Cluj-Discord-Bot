@@ -3,7 +3,7 @@ import { UserClient } from "../command-interface";
 
 const prefix = process.env.PREFIX;
 
-let message = (client: Client, message: Message) => {
+let message = async (client: Client, message: Message) => {
     if (message.content[0] !== prefix || message.author.bot) return;
 
     let args: string[] = message.content.slice(prefix.length).trim().split(" ");
@@ -12,7 +12,7 @@ let message = (client: Client, message: Message) => {
     if (!cmd) return;
 
     try {
-        cmd.run(client, message, args);
+        await cmd.run(client, message, args);
     } catch (error) {
         console.error(error);
     }

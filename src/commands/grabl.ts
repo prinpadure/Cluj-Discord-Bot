@@ -2,9 +2,17 @@ import * as command from "../command-interface";
 import { Client, Message } from "discord.js";
 import { default as Grab } from "../models/grab-model";
 
-let run: command.Run = (client: Client, message: Message, args: string[]) => {
+let run: command.Run = async (
+    client: Client,
+    message: Message,
+    args: string[]
+) => {
     let user = message.mentions.members?.first();
-    let grabs = Grab.find().sort({ _id: -1 }).limit(10);
+
+    let grabs = Grab.find(user ? { userId: user.user.id } : {})
+        .sort({ _id: -1 })
+        .limit(10);
+
     grabs.exec((err, grabs) => {
         if (err) console.error(err);
         let allGrabs = "Server grabs:\n```";
@@ -14,7 +22,9 @@ let run: command.Run = (client: Client, message: Message, args: string[]) => {
         }
         allGrabs += "```";
         console.log(grabs.length);
-        message.channel.send(allGrabs);
+        grabs.length > 0
+            ? message.channel.send(allGrabs)
+            : message.channel.send("Not Found.");
     });
 };
 

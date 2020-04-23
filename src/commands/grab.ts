@@ -3,33 +3,54 @@ import { Run, Help } from "../command-interface";
 import { default as Grab } from "../models/grab-model";
 import { default as mongoose } from "mongoose";
 
-let run: Run = (client: Client, message: Message, args: string[]) => {
-    let user = message.mentions.members?.first();
-    const arg = args[0];
-    if (user?.user.bot) return;
-    if (user) {
-        let content = user.lastMessage?.content.substring(0, 3);
-        if (content === "```") message.channel.send("Can't grab code blocks.");
-        let grab = new Grab({
-            _id: mongoose.Types.ObjectId(),
-            userId: user.id,
-            userName: user.user.username,
-            grabMessage: user.lastMessage?.content,
-        });
-        grab.save()
-            .then((result) => {
-                message.channel.send("Done.");
-                console.log(result);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        return;
-    } else if (!arg) {
-        message.channel.send(`${help.usage}`);
-        return;
+let run: Run = async (client: Client, message: Message, args: string[]) => {
+    if (!args[0]) {
+        message.channel.send(help.usage);
+    } else {
+        await processGrab(client, message, args);
     }
-    message.channel.send(`Not found`);
+};
+
+let isCodeBlock = (content: string): boolean => {
+    return (content.match(/```/g) || []).length === 2;
+};
+
+let processGrab = async (client: Client, message: Message, args: string[]) => {
+    const user = message.mentions.members?.first();
+    let messageToGrab: Message | undefined;
+    let messageToSend = "Not found.";
+
+    if (user && user.lastMessage) {
+        messageToGrab = user.lastMessage;
+    } else if (message.content.includes("https://discordapp.com/channels/")) {
+        let messageId = message.content.slice(
+            message.content.lastIndexOf("/") + 1
+        );
+        messageToGrab = await message.channel.messages.fetch(messageId);
+    }
+
+    if (messageToGrab) {
+        if (messageToGrab.author.id === message.author.id) {
+            messageToSend = "You can't grab yourself.";
+        } else if (isCodeBlock(messageToGrab.content)) {
+            messageToSend = "Can't grab code blocks.";
+        } else {
+            grabUserMessage(message, messageToGrab);
+            messageToSend = "Done.";
+        }
+    }
+    message.channel.send(messageToSend);
+};
+
+let grabUserMessage = async (message: Message, grabMessage: Message) => {
+    let grab = new Grab({
+        _id: mongoose.Types.ObjectId(),
+        userId: grabMessage.author.id,
+        userName: grabMessage.author.username,
+        grabMessage: grabMessage,
+    });
+    let saved = await grab.save();
+    console.log(saved);
 };
 
 let help: Help = {
