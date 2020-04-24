@@ -3,6 +3,7 @@ import { default as mongoose } from "mongoose";
 let init = () => {
     const dbOptions: mongoose.ConnectionOptions = {
         useNewUrlParser: true,
+        useUnifiedTopology: true,
         autoIndex: false,
         reconnectTries: Number.MAX_VALUE,
         reconnectInterval: 500,
@@ -11,7 +12,9 @@ let init = () => {
         family: 4,
     };
     console.log();
-    mongoose.connect(process.env.MONGO_URI!, dbOptions);
+    mongoose.connect(process.env.MONGO_URI!, dbOptions).catch((reason) => {
+        console.log(reason);
+    });
     mongoose.set("useFindAndModify", false);
     (mongoose as any).Promise = global.Promise;
 
