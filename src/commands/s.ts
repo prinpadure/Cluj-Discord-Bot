@@ -7,11 +7,21 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
     if (first && second) {
         let messages = await message.channel.messages.fetch({ limit: 50 });
         const msg = messages.find((m) => {
-            return m.content.includes(first) && message != m;
+            return (
+                m.content.includes(first) &&
+                message.author !== m.author &&
+                !m.author.bot
+            );
         });
         if (msg) {
-            const username = "(" + message.author.username + ") ";
-            message.channel.send(username + msg.content.replace(first, second));
+            const content =
+                "(" +
+                message.author.username +
+                ") " +
+                "<" +
+                msg.author.username +
+                "> ";
+            message.channel.send(content + msg.content.replace(first, second));
         }
     }
 };
