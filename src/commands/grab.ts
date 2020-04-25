@@ -36,7 +36,7 @@ let processGrab = async (client: Client, message: Message, args: string[]) => {
             messageToSend = "Done.";
         }
     }
-    message.channel.send(messageToSend);
+    await message.channel.send(messageToSend);
 };
 
 let grabUserMessage = async (message: Message, grabMessage: Message) => {

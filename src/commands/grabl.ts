@@ -26,8 +26,8 @@ let run: command.Run = async (
     }
     codeBlockGrabs += codeBlock;
     grabs.length > 0
-        ? message.channel.send(codeBlockGrabs)
-        : message.channel.send("Not Found.");
+        ? await message.channel.send(codeBlockGrabs)
+        : await message.channel.send("Not Found.");
 };
 
 let getGrabs = async (user?: User) => {

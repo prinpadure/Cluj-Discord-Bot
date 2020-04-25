@@ -3,7 +3,7 @@ import { Run, Help } from "../command-interface";
 
 const regional_indicator = ":regional_indicator_";
 
-let run: Run = (client: Client, message: Message, args: string[]) => {
+let run: Run = async (client: Client, message: Message, args: string[]) => {
     const wholeArg = args.join(" ");
     const username = "(" + message.author.username + ")";
     let content = "";
@@ -17,7 +17,7 @@ let run: Run = (client: Client, message: Message, args: string[]) => {
     if (content) {
         content = username + " " + content;
         console.log(content);
-        message.channel.send(content);
+        await message.channel.send(content);
     }
 };
 
