@@ -5,7 +5,7 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
     const first = args[0];
     const second = args[1];
     if (first && second) {
-        let messages = await message.channel.messages.fetch({ limit: 150 });
+        let messages = await message.channel.messages.fetch({ limit: 100 });
         const msg = messages.find((m) => {
             return (
                 m.content.includes(first) &&
