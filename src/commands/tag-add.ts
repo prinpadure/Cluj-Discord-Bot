@@ -1,6 +1,5 @@
 import { Client, Message } from "discord.js";
 import { Run, Help } from "../command-interface";
-import { default as Grab } from "../models/grab-model";
 import { default as mongoose } from "mongoose";
 import { default as Tag } from "../models/tag-model";
 
@@ -9,7 +8,11 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
     if (!args[0] || !args[1]) {
         content = help.usage;
     } else {
+        content = "Done.";
         await processAddTag(client, message, args);
+    }
+    if (content) {
+        message.channel.send(content);
     }
 };
 
