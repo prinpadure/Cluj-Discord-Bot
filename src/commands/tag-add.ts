@@ -11,9 +11,7 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
         content = "Done.";
         await processAddTag(client, message, args);
     }
-    if (content) {
-        message.channel.send(content);
-    }
+    message.channel.send(content);
 };
 
 let processAddTag = async (
