@@ -6,6 +6,7 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
     let content = "";
     if (!args[0]) {
         content = help.usage;
+        content += "```" + (await getAllTags()).join("```, ```");
     } else {
         content = await getTag(args[0]);
     }
@@ -19,10 +20,19 @@ let getTag = async (tagIdentifier: string) => {
     return content;
 };
 
+let getAllTags = async () => {
+    let tags: string[] = [];
+    let allTags = (await Tag.find()) as any[];
+    allTags.forEach((tag) => {
+        tags.push(tag.tag);
+    });
+    return tags;
+};
+
 let help: Help = {
     info: "View tag",
     name: "tag",
-    usage: "tag <tag>; tags:",
+    usage: "tag <tag>; tags: ",
 };
 
 export = { help, run };
