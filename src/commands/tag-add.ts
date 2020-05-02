@@ -21,11 +21,12 @@ let processAddTag = async (
     args: string[]
 ) => {
     const identifier = args[0];
+    const content = args.slice(1).join(" ");
     let tag = new Tag({
         _id: mongoose.Types.ObjectId(),
         userName: message.author.username,
         tag: identifier,
-        content: message.content,
+        content: content,
     });
     let saved = await tag.save();
     console.log(saved);
