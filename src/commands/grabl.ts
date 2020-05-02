@@ -1,6 +1,7 @@
 import * as command from "../command-interface";
 import { Client, Message, User } from "discord.js";
 import { default as Grab } from "../models/grab-model";
+import { messages } from "../utils/messageContentUtils";
 
 const codeBlock = "```";
 
@@ -27,7 +28,7 @@ let run: command.Run = async (
     codeBlockGrabs += codeBlock;
     grabs.length > 0
         ? await message.channel.send(codeBlockGrabs)
-        : await message.channel.send("Not Found.");
+        : await message.channel.send(messages.NotFound);
 };
 
 let getGrabs = async (user?: User) => {

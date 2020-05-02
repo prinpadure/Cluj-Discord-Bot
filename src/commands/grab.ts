@@ -2,7 +2,7 @@ import { Client, Message } from "discord.js";
 import { Run, Help } from "../command-interface";
 import { default as Grab } from "../models/grab-model";
 import { default as mongoose } from "mongoose";
-import { isCodeBlock } from "../utils/messageContentUtils";
+import { isCodeBlock, messages } from "../utils/messageContentUtils";
 
 let run: Run = async (client: Client, message: Message, args: string[]) => {
     if (!args[0]) {
@@ -15,7 +15,7 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
 let processGrab = async (client: Client, message: Message, args: string[]) => {
     const user = message.mentions.members?.first();
     let messageToGrab: Message | undefined;
-    let messageToSend = "Not found.";
+    let messageToSend = messages.NotFound;
 
     if (user && user.lastMessage) {
         messageToGrab = user.lastMessage;
@@ -33,7 +33,7 @@ let processGrab = async (client: Client, message: Message, args: string[]) => {
             messageToSend = "Can't grab code blocks.";
         } else {
             grabUserMessage(message, messageToGrab);
-            messageToSend = "Done.";
+            messageToSend = messages.Done;
         }
     }
     await message.channel.send(messageToSend);

@@ -1,22 +1,23 @@
 import { Client, Message } from "discord.js";
 import { Run, Help } from "../command-interface";
 import { default as Tag } from "../models/tag-model";
+import { messages } from "../utils/messageContentUtils";
 
 let run: Run = async (client: Client, message: Message, args: string[]) => {
     let content = "";
     if (!args[0]) {
-        content = help.usage;
-        content += "```" + (await getAllTags()).join("```, ```");
+        content = help.usage + (await getAllTagsAsString());
     } else {
         content = await getTag(args[0]);
     }
+    console.log(content);
     message.channel.send(content);
 };
 
 let getTag = async (tagIdentifier: string) => {
     let content = "";
     let tag = (await Tag.findOne({ tag: tagIdentifier })) as any;
-    content = tagIdentifier ? tag.tag : "Not Found.";
+    content = tagIdentifier ? tag.content : messages.NotFound;
     return content;
 };
 
@@ -29,10 +30,17 @@ let getAllTags = async () => {
     return tags;
 };
 
+let getAllTagsAsString = async () => {
+    const codeBlock = messages.codeBlock;
+    const separator = codeBlock + ", `";
+    let tags = codeBlock + (await getAllTags()).join(separator) + codeBlock;
+    return tags;
+};
+
 let help: Help = {
     info: "View tag",
     name: "tag",
-    usage: "tag <tag>; tags: ",
+    usage: "list of tags: ",
 };
 
 export = { help, run };
