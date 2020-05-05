@@ -3,7 +3,9 @@ import fs from "fs";
 import { UserClient } from "./command-interface";
 import { default as initMongoose } from "./utils/mongoose";
 import { config } from "dotenv-flow";
+import initPing from "./server";
 
+initPing();
 config();
 
 const client = new Client() as UserClient;
