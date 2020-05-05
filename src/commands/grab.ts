@@ -19,7 +19,7 @@ let processGrab = async (client: Client, message: Message, args: string[]) => {
 
     if (user && user.lastMessage) {
         messageToGrab = user.lastMessage;
-    } else if (message.content.includes("https://discordapp.com/channels/")) {
+    } else if (message.content.includes("/channels/")) {
         let messageId = message.content.slice(
             message.content.lastIndexOf("/") + 1
         );
