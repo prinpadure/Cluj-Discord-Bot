@@ -17,7 +17,7 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
 let getTag = async (tagIdentifier: string) => {
     let content = "";
     let tag = (await Tag.findOne({ tag: tagIdentifier })) as any;
-    content = tagIdentifier ? tag.content : messages.NotFound;
+    content = tag ? tag.content : messages.NotFound;
     return content;
 };
 
