@@ -7,4 +7,5 @@ export const messages = {
     codeBlock: "`",
     Done: "Done.",
     NotFound: "Not Found.",
+    NotAllowed: "Not Allowed.",
 };

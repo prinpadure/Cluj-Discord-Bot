@@ -5,16 +5,17 @@ import { messages } from "../utils/messageContentUtils";
 
 let run: Run = async (client: Client, message: Message, args: string[]) => {
     let content = "";
-    if (!args[0]) {
+    if (!message.member?.hasPermission("ADMINISTRATOR")) {
+        content = messages.NotAllowed;
+    } else if (!args[0]) {
         content = help.usage;
     } else {
-        content = await getTag(args[0]);
+        content = await processDeleteTag(args[0]);
     }
-    console.log(content);
     message.channel.send(content);
 };
 
-let getTag = async (tagIdentifier: string) => {
+let processDeleteTag = async (tagIdentifier: string) => {
     let content = "";
     let tag = await Tag.deleteOne({ tag: tagIdentifier });
     content = tag.deletedCount ? messages.Done : messages.NotFound;
@@ -22,9 +23,9 @@ let getTag = async (tagIdentifier: string) => {
 };
 
 let help: Help = {
-    info: "Delete tag",
+    info: "Deletes tag",
     name: "tag-delete",
     usage: "tag-delete <tag>",
 };
 
-export = { help, run };
+export { help, run };

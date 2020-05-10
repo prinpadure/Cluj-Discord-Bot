@@ -8,13 +8,12 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
     if (!args[0]) {
         content = help.usage + (await getAllTagsAsString());
     } else {
-        content = await getTag(args[0]);
+        content = await getTagContent(args[0]);
     }
-    console.log(content);
     message.channel.send(content);
 };
 
-let getTag = async (tagIdentifier: string) => {
+let getTagContent = async (tagIdentifier: string) => {
     let content = "";
     let tag = (await Tag.findOne({ tag: tagIdentifier })) as any;
     content = tag ? tag.content : messages.NotFound;
@@ -43,4 +42,4 @@ let help: Help = {
     usage: "list of tags: ",
 };
 
-export = { help, run };
+export { help, run };
