@@ -1,31 +1,29 @@
 import { Client, Message } from "discord.js";
 import { Run, Help } from "../command-interface";
+import { messages } from "../utils/messageContentUtils";
 
 let run: Run = async (client: Client, message: Message, args: string[]) => {
     const first = args[0];
     const second = args[1];
+    let content = messages.NotFound;
+
     if (first && second) {
         let messages = await message.channel.messages.fetch({ limit: 100 });
         const msg = messages.find((m) => {
-            return (
-                m.content.includes(first) &&
-                message.author !== m.author &&
-                !m.author.bot
-            );
+            return m.content.includes(first) && !m.content.includes(".s") && !m.author.bot;
         });
         if (msg) {
-            const content =
+            content =
                 "(" +
                 message.author.username +
                 ") " +
                 "<" +
                 msg.author.username +
-                "> ";
-            await message.channel.send(
-                content + msg.content.replace(first, second)
-            );
+                "> " +
+                msg.content.replace(new RegExp(first, "g"), () => second);
         }
     }
+    await message.channel.send(content);
 };
 
 let help: Help = {
