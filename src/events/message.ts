@@ -9,7 +9,7 @@ let message = async (client: Client, message: Message) => {
     let args: string[] = message.content.slice(prefix.length).trim().split(" ");
     let command = args.shift()!.toLowerCase();
     const cmd = (client as UserClient).commands.get(command);
-    if (!cmd) return;
+    if (!cmd || message.channel.type === "dm") return;
 
     try {
         await cmd.run(client, message, args);

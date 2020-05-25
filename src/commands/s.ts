@@ -23,6 +23,7 @@ let run: Run = async (client: Client, message: Message, args: string[]) => {
                 msg.content.replace(new RegExp(first, "g"), () => second);
         }
     }
+    console.debug(content);
     await message.channel.send(content);
 };
 
